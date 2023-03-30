@@ -21,7 +21,7 @@ function App(){
   return (
   <View>
     <Text>
-      hello 
+      hello worldddaaaa
     </Text>
   </View>
   );
