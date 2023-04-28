@@ -1,9 +1,8 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Pressable, ScrollView, StyleSheet, Text} from 'react-native';
 
 function CategorySideBar(props) {
   const {changeSelectedCategory, selectedCategory, categories = []} = props;
-
   return (
     <ScrollView
       style={{

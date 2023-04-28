@@ -1,4 +1,4 @@
-import {Text, View, FlatList, ScrollView, SafeAreaView} from 'react-native';
+import {View, FlatList} from 'react-native';
 import {ActivityIndicator} from 'react-native-paper';
 import axios from 'axios';
 import {useEffect, useState} from 'react';
@@ -15,32 +15,12 @@ const CategoryPage = () => {
       method: 'get',
     });
     const cats = await axios({
-      url: 'https://api.escuelajs.co/api/v1/categories/',
-      // method: 'delete',
-      // data: {
-      //   name: 'Swimming',
-      //   image: 'https://placeimg.com/640/480/any',
-      // },
+      url: 'https://api.escuelajs.co/api/v1/categories',
+      method: 'get',
     });
-    // const rrrr = await axios({
-    //   url: 'https://api.escuelajs.co/api/v1/products/',
-    //   method: 'post',
-    //   data: {
-    //     title: 'Winter Shoes - Baby',
-    //     price: 10,
-    //     description: 'A description',
-    //     categoryId: 18,
-    //     images: ['https://placeimg.com/640/480/any'],
-    //   },
-    // });
-    // console.log(rrrr);
+
     setProducts(products.data);
-    // let categories = [];
-    // products.data.forEach(product => {
-    //   const category = product.category;
-    //   const found = categories.find(cat => category.name == cat);
-    //   if (found == null) categories.push(category.name);
-    // });
+
     setCategories(cats.data);
     setLoading(false);
   };
@@ -62,7 +42,7 @@ const CategoryPage = () => {
       style={{
         flex: 1,
         flexDirection: 'row',
-        // backgroundColor: '#353b48',
+        backgroundColor: '#353b48',
       }}>
       <CategorySideBar
         categories={categories}
@@ -70,8 +50,7 @@ const CategoryPage = () => {
         selectedCategory={selectedCategory}
       />
       <FlatList
-        bounces={false}
-        style={{width: 170}}
+        style={{width: 140}}
         keyExtractor={(item, index) => index.toString()}
         numColumns={2}
         showsVerticalScrollIndicator={false}
@@ -101,3 +80,4 @@ const CategoryPage = () => {
 };
 
 export default CategoryPage;
+0;

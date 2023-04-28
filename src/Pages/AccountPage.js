@@ -1,5 +1,4 @@
 import {Text, View, StyleSheet, Linking} from 'react-native';
-import CategorySideBar from '../Components/CategorySideBar';
 import {TextInput, Button} from 'react-native-paper';
 import {useState} from 'react';
 

@@ -1,23 +1,29 @@
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
-import {View, Text, FlatList, ScrollView, Pressable, Image} from 'react-native';
+import {View, FlatList, ScrollView} from 'react-native';
 import {ActivityIndicator} from 'react-native-paper';
 import ProductThumbnail from '../Components/ProductThumbnail';
 import RouteNames from '../constants/routeNames';
 import CategorySeperator from '../Components/CategorySeperator';
 
-const PRODUCTS_ENDPOINT =
-  ' https://api.escuelajs.co/api/v1/products?offset=0&limit=30';
+const PRODUCTS_ENDPOINT = 'https://api.escuelajs.co/api/v1/products';
 
 const HomePage = ({navigation}) => {
-  const Products_axios = async () => {
-    // setLoading(true);
-    const products = await axios({url: PRODUCTS_ENDPOINT, method: 'get'});
-    setProducts(products.data);
-    setLoading(false);
-  };
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const Products_axios = async () => {
+    try {
+      const products = await axios({url: PRODUCTS_ENDPOINT, method: 'get'});
+      console.log(products);
+      setProducts(products.data);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+    // setLoading(true);
+  };
+
   useEffect(() => {
     Products_axios();
   }, []);
@@ -31,13 +37,13 @@ const HomePage = ({navigation}) => {
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
-      style={{flex: 1, backgroundColor: '#7f8fa6'}}>
+      style={{flex: 1, backgroundColor: 'white'}}>
       <CategorySeperator
-        title="Ramadan Offers"
+        title="Men"
         onPress={() => {
           navigation.navigate(RouteNames.PRODUCTS_LIST, {
-            category: 'ramadan',
-            name: 'Ramadan',
+            category: 'Men',
+            name: 'Men',
           });
           // after navigation and passing params you have to check the params in the navigated screen
           // you can either extract the route from props or use the hook useRoute
@@ -54,11 +60,11 @@ const HomePage = ({navigation}) => {
         )}
       />
       <CategorySeperator
-        title="New Year 2023"
+        title="Women"
         onPress={() => {
           navigation.navigate(RouteNames.PRODUCTS_LIST, {
-            category: 'new year',
-            name: 'New Year',
+            category: 'Women',
+            name: 'Women',
           });
         }}
       />
@@ -72,12 +78,13 @@ const HomePage = ({navigation}) => {
           <ProductThumbnail item={item} index={index} />
         )}
       />
+
       <CategorySeperator
-        title="Holidays"
+        title="Kids"
         onPress={() => {
           navigation.navigate(RouteNames.PRODUCTS_LIST, {
-            name: 'Holidays',
-            category: 'holidays',
+            name: 'Kids',
+            category: 'Kids',
           });
         }}
       />

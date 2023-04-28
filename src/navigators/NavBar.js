@@ -7,6 +7,7 @@ import HomePage from '../Pages/HomePage';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import RouteNames from '../constants/routeNames';
 import {createStackNavigator} from '@react-navigation/stack';
+import ProductDetails from '../Components/ProductDetails';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -26,7 +27,10 @@ function ProductsNav() {
         name={RouteNames.PRODUCTS_LIST}
         component={HomePage}
       />
-      <Stack.Screen name={RouteNames.PRODUCTS_DETAILS} component={HomePage} />
+      <Stack.Screen
+        name={RouteNames.PRODUCTS_DETAILS}
+        component={ProductDetails}
+      />
     </Stack.Navigator>
   );
 }
@@ -56,17 +60,6 @@ function NavBar() {
         component={CategoryPage}
       />
       <Tab.Screen
-        name={RouteNames.ACCOUNT}
-        options={{
-          headerShown: false,
-          tabBarLabel: 'Account',
-          tabBarIcon: ({color}) => (
-            <MaterialCommunityIcons name="account" color={color} size={26} />
-          ),
-        }}
-        component={AccountPage}
-      />
-      <Tab.Screen
         name={RouteNames.CART}
         options={{
           headerShown: false,
@@ -76,6 +69,17 @@ function NavBar() {
           ),
         }}
         component={CartPage}
+      />
+      <Tab.Screen
+        name={RouteNames.ACCOUNT}
+        options={{
+          headerShown: false,
+          tabBarLabel: 'Account',
+          tabBarIcon: ({color}) => (
+            <MaterialCommunityIcons name="account" color={color} size={26} />
+          ),
+        }}
+        component={AccountPage}
       />
     </Tab.Navigator>
   );
