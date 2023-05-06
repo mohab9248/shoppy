@@ -6,7 +6,8 @@ import ProductThumbnail from '../Components/ProductThumbnail';
 import RouteNames from '../constants/routeNames';
 import CategorySeperator from '../Components/CategorySeperator';
 
-const PRODUCTS_ENDPOINT = 'https://api.escuelajs.co/api/v1/products';
+// const PRODUCTS_ENDPOINT = 'https://fakestoreapi.com/products';
+const PRODUCTS_ENDPOINT = 'https://fakestoreapi.com/products';
 
 const HomePage = ({navigation}) => {
   const [products, setProducts] = useState([]);
@@ -14,7 +15,12 @@ const HomePage = ({navigation}) => {
   const Products_axios = async () => {
     try {
       const products = await axios({url: PRODUCTS_ENDPOINT, method: 'get'});
-      console.log(products);
+
+      // products.data = products.data.map(i => ({
+      //   ...i,
+      //   images: [i.image],
+      //   category: {id: i.category, image: null, name: i.category},
+      // }));
       setProducts(products.data);
       setLoading(false);
     } catch (error) {
@@ -37,7 +43,7 @@ const HomePage = ({navigation}) => {
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
-      style={{flex: 1, backgroundColor: 'white'}}>
+      style={{flex: 1, backgroundColor: '#30336b'}}>
       <CategorySeperator
         title="Men"
         onPress={() => {
@@ -93,7 +99,7 @@ const HomePage = ({navigation}) => {
         horizontal
         contentContainerStyle={{padding: 10}}
         showsHorizontalScrollIndicator={false}
-        data={products.slice(20, 30)}
+        data={products.slice(0, 10)}
         renderItem={({item, index}) => (
           <ProductThumbnail item={item} index={index - 1} />
         )}
