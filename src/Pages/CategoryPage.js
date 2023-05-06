@@ -1,35 +1,45 @@
-import {View, FlatList} from 'react-native';
+import {View, FlatList, Dimensions} from 'react-native';
 import {ActivityIndicator} from 'react-native-paper';
 import axios from 'axios';
 import {useEffect, useState} from 'react';
 import ProductThumbnail from '../Components/ProductThumbnail';
 import CategorySideBar from '../Components/CategorySideBar';
-
-const PRODUCTS_ENDPOINT = ' https://api.escuelajs.co/api/v1/categories/';
+const {width, height} = Dimensions.get('window');
+const PRODUCTS_ENDPOINT = 'https://fakestoreapi.com/products/category/';
 const CategoryPage = () => {
-  const [selectedCategory, setSelectedCategory] = useState(1);
-  const Products_axios = async () => {
-    // setLoading(true);
-    const products = await axios({
-      url: PRODUCTS_ENDPOINT + selectedCategory + '/products',
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const getCategories = async () => {
+    const cats = await axios({
+      url: 'https://fakestoreapi.com/products/categories',
       method: 'get',
     });
-    const cats = await axios({
-      url: 'https://api.escuelajs.co/api/v1/categories',
+    setCategories(cats.data);
+    cats.data.length &&
+      selectedCategory == null &&
+      setSelectedCategory(cats.data?.[0]);
+  };
+
+  const getProducts = async () => {
+    // setLoading(true);
+    const products = await axios({
+      url: PRODUCTS_ENDPOINT + selectedCategory,
       method: 'get',
     });
 
     setProducts(products.data);
-
-    setCategories(cats.data);
     setLoading(false);
   };
+
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
-  console.log(categories);
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    Products_axios();
+    getCategories();
+  }, []);
+
+  useEffect(() => {
+    getProducts();
   }, [selectedCategory]);
   if (loading)
     return (
@@ -42,7 +52,7 @@ const CategoryPage = () => {
       style={{
         flex: 1,
         flexDirection: 'row',
-        backgroundColor: '#353b48',
+        backgroundColor: '#30336b',
       }}>
       <CategorySideBar
         categories={categories}
@@ -50,12 +60,12 @@ const CategoryPage = () => {
         selectedCategory={selectedCategory}
       />
       <FlatList
-        style={{width: 140}}
+        style={{maxWidth: width * 0.65, width: width * 0.65}}
         keyExtractor={(item, index) => index.toString()}
         numColumns={2}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          backgroundColor: '#353b48',
+          backgroundColor: '#30336b',
         }}
         data={products}
         renderItem={({item, index}) => (
