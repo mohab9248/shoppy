@@ -8,6 +8,7 @@ function Product({id, images, title, price}) {
       <Text style={styles.price}>{price}$</Text>
       <Image
         style={{width: 100, height: 100}}
+        resizeMode="contain"
         source={{
           uri: `${images?.[0]}`,
         }}

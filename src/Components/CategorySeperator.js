@@ -13,11 +13,12 @@ const CategorySeperator = ({title, onPress}) => {
         paddingHorizontal: 10,
         marginBottom: 10,
         borderBottomWidth: 1,
+        backgroundColor: '#130f40',
       }}>
-      <Text>{title}</Text>
+      <Text style={{color: 'white', fontWeight: 'bold'}}>{title}</Text>
       <Pressable onPress={onPress}>
-        <Text>
-          View All <MaterialCommunityIcons name="arrow-right" />
+        <Text style={{color: 'white', fontWeight: 'bold'}}>
+          View All <MaterialCommunityIcons name="arrow-right" color={'white'} />
         </Text>
       </Pressable>
     </View>

@@ -3,6 +3,7 @@ import {Pressable, ScrollView, StyleSheet, Text} from 'react-native';
 
 function CategorySideBar(props) {
   const {changeSelectedCategory, selectedCategory, categories = []} = props;
+  const changeCategory = s => () => changeSelectedCategory(s);
   return (
     <ScrollView
       style={{
@@ -15,18 +16,19 @@ function CategorySideBar(props) {
       {categories.map((s, index) => {
         return (
           <Pressable
-            onPress={() => changeSelectedCategory(s.id)}
+            onPress={changeCategory(s)}
             key={index}
             style={{
               flex: 1,
               textAlign: 'center',
-              borderRightColor: '#353b48',
+              borderRightColor: '#30336b',
               borderWidth: 1,
+              borderBottomWidth: 0,
               padding: 15,
-              backgroundColor: s.id == selectedCategory ? '#353b48' : 'black',
+              backgroundColor: s == selectedCategory ? '#30336b' : '#130f40',
             }}>
-            <Text style={styles.Text} numberOfLines={1} adjustsFontSizeToFit>
-              {s.name}
+            <Text style={styles.Text} numberOfLines={2} adjustsFontSizeToFit>
+              {s}
             </Text>
           </Pressable>
         );
@@ -37,7 +39,8 @@ function CategorySideBar(props) {
 const styles = StyleSheet.create({
   Text: {
     color: 'white',
-    fontSize: 18,
+    fontSize: 16,
+    textTransform: 'capitalize',
   },
 });
 

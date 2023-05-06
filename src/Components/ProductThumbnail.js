@@ -34,7 +34,7 @@ export default function ProductThumbnail({
           ...imageStyle,
         }}
         resizeMode="cover"
-        source={{uri: item.images[0]}}
+        source={{uri: item.image}}
       />
       <Text
         style={{fontSize: 15, fontWeight: 'bold', ...textStyle}}

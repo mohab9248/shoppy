@@ -3,8 +3,7 @@ import {useState, useEffect} from 'react';
 import ProductThumbnail from '../Components/ProductThumbnail';
 import axios from 'axios';
 
-const PRODUCTS_ENDPOINT =
-  ' https://api.escuelajs.co/api/v1/products?offset=0&limit=30';
+const PRODUCTS_ENDPOINT = 'https://fakestoreapi.com/products';
 
 const CategoryProductList = () => {
   const Products_axios = async () => {
@@ -25,15 +24,22 @@ const CategoryProductList = () => {
       </View>
     );
   return (
-    <View style={{flex: 1, direction: 'rtl', display: 'flex', marginLeft: 120}}>
+    <View
+      style={{
+        flex: 1,
+        direction: 'rtl',
+        display: 'flex',
+        marginLeft: 120,
+        backgroundColor: '#30336b',
+      }}>
       <FlatList
         key={'_'}
         keyExtractor={item => '_' + item.id}
         numColumns={2}
         showsVerticalScrollIndicator={false}
         style={{flex: 1}}
-        contentContainerStyle={{padding: 10}}
-        data={products.slice(0, 21)}
+        contentContainerStyle={{padding: 10, backgroundColor: '#30336b'}}
+        data={products}
         renderItem={({item, index}) => (
           <ProductThumbnail item={item} index={index - 1} />
         )}
