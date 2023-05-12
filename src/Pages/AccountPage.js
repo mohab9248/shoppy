@@ -1,4 +1,10 @@
-import {Text, View, StyleSheet, Linking} from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  Linking,
+  useWindowDimensions,
+} from 'react-native';
 import {TextInput, Button} from 'react-native-paper';
 import {useState} from 'react';
 
@@ -9,9 +15,9 @@ const AccountPage = () => {
     <View
       style={{
         flex: 1,
-        alignContent: 'center',
-        margin: 50,
-        // backgroundColor: 'black',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#30336b',
       }}>
       <TextInput
         style={styles.TextInput}
@@ -30,18 +36,25 @@ const AccountPage = () => {
       <Button
         mode="contained"
         onPress={() => console.log('Pressed')}
-        style={{margin: 20}}>
+        style={{margin: 10}}>
         Login
       </Button>
       <View style={styles.lineStyle} />
-      <Text style={{flex: 1, textAlign: 'center'}}>
-        Don't have an account?
+      <View style={{flexDirection: 'row', marginTop: 5}}>
+        <Text
+          style={{
+            textAlign: 'center',
+            color: 'white',
+            marginRight: 5,
+          }}>
+          Don't have an account?
+        </Text>
         <Text
           style={{color: 'blue'}}
           onPress={() => Linking.openURL('http://google.com')}>
           SignUp
         </Text>
-      </Text>
+      </View>
     </View>
   );
 };
@@ -49,11 +62,13 @@ const AccountPage = () => {
 const styles = StyleSheet.create({
   TextInput: {
     margin: 5,
+    width: 250,
+    justifyContent: 'center',
   },
   lineStyle: {
     borderWidth: 0.5,
-    borderColor: 'black',
-    margin: 10,
+    borderColor: 'white',
+    paddingLeft: '50%',
   },
 });
 export default AccountPage;
