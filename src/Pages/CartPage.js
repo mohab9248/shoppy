@@ -1,12 +1,14 @@
 import {
+  Animated,
   FlatList,
   Image,
   Pressable,
   Text,
   View,
   useWindowDimensions,
+  Easing,
 } from 'react-native';
-import {useContext, useEffect, useState} from 'react';
+import {useContext, useEffect, useRef, useState} from 'react';
 import {CartContext} from '../navigators/NavBar';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -16,53 +18,118 @@ function CartItem({item, deleteItem}) {
     <View
       style={{
         width: width,
-        backgroundColor: 'grey',
+        backgroundColor: '#130f40',
         flexDirection: 'row',
-        padding: 5,
+        margin: 1,
+        borderWidth: 4,
+        borderColor: '#130f40',
+        borderRadius: 7,
       }}>
       <View style={{}}>
         <Image
           style={{
             width: 95,
             height: 95,
+            borderRadius: 7,
           }}
           resizeMode="cover"
           source={{uri: item.image}}
         />
-        <Text style={{fontWeight: 'bold', textAlign: 'center'}}>
+        <Text style={{fontWeight: 'bold', textAlign: 'center', color: 'white'}}>
           {item.price}$
         </Text>
       </View>
       <View style={{flex: 1, padding: 10}}>
         <View>
-          <Text style={{color: 'white'}}>{item.title}</Text>
+          <Text numberOfLines={2} style={{color: 'white'}}>
+            {item.title}
+          </Text>
         </View>
-        <Text numberOfLines={2} ellipsizeMode="tail" style={{color: 'black'}}>
+        <Text numberOfLines={2} ellipsizeMode="tail" style={{color: 'grey'}}>
           {item.description}
         </Text>
       </View>
       <Pressable
         style={{justifyContent: 'center', alignItems: 'center'}}
         onPress={deleteItem}>
-        <MaterialCommunityIcons name="delete" color={'black'} size={32} />
+        <MaterialCommunityIcons name="delete" color={'red'} size={32} />
       </Pressable>
     </View>
   );
 }
 const CartPage = ({setCart, ...rest}) => {
-  const {width} = useWindowDimensions();
+  const backgroundCart = new Animated.Value(0);
+
   const [i, setI] = useState(false);
   useEffect(() => {
-    console.log('hello');
     setI(!i);
   }, [cartItems]);
 
   const cartItems = useContext(CartContext);
+
+  const totalPrice = cartItems.reduce(
+    (accumulator, current) => accumulator + current.price,
+    0,
+  );
+  if (cartItems == 0)
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: '#30336b',
+        }}>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Text style={{color: 'white', fontSize: 20, margin: 5}}>
+            Your Cart is Empty
+          </Text>
+          <MaterialCommunityIcons
+            name="cart-remove"
+            color={'white'}
+            size={32}
+          />
+        </View>
+        {/* <View
+          style={{
+            backgroundColor: '#4a69bd',
+            height: 35,
+            alignItems: 'center',
+            flexDirection: 'row',
+          }}>
+          <View>
+            <Text
+              style={{
+                fontSize: 17,
+                marginLeft: 5,
+                color: 'black',
+              }}>
+              {cartItems.length} items
+            </Text>
+          </View>
+          <View
+            style={{
+              justifyContent: 'flex-end',
+              marginLeft: 'auto',
+            }}>
+            <Text
+              style={{
+                fontSize: 17,
+                color: 'black',
+              }}>
+              Total: {totalPrice}$
+            </Text>
+          </View>
+        </View> */}
+      </View>
+    );
   return (
-    <View style={{flex: 1}}>
-      <Text>Cart Page</Text>
+    <View style={{flex: 1, backgroundColor: '#30336b'}}>
       <FlatList
-        style={{flex: 1}}
         keyExtractor={(item, index) => index.toString()}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
@@ -90,6 +157,109 @@ const CartPage = ({setCart, ...rest}) => {
           />
         )}
       />
+      <View
+        style={{
+          backgroundColor: '#4a69bd',
+          height: 35,
+          alignItems: 'center',
+          flexDirection: 'row',
+        }}>
+        <View>
+          <Text
+            style={{
+              fontSize: 17,
+              marginLeft: 5,
+              color: 'black',
+            }}>
+            {cartItems.length} items
+          </Text>
+        </View>
+        <View
+          style={{
+            justifyContent: 'flex-end',
+            marginLeft: 'auto',
+          }}>
+          <Text
+            style={{
+              fontSize: 17,
+              color: 'black',
+            }}>
+            Total: {totalPrice}$
+          </Text>
+        </View>
+      </View>
+      <View
+        style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: '#192a56',
+          padding: 10,
+        }}>
+        <Pressable
+          onPress={() => {
+            Animated.timing(backgroundCart, {
+              toValue: 1,
+              duration: 1000,
+              easing: Easing.bounce,
+              useNativeDriver: false,
+            }).start();
+            console.log('hello');
+          }}
+          style={{
+            backgroundColor: '#2980b9',
+            width: '70%',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: 10,
+            flexDirection: 'row',
+          }}>
+          <Animated.View
+            style={{
+              backgroundColor: '#bdc3c7',
+              width: backgroundCart.interpolate({
+                inputRange: [0, 1],
+                outputRange: ['0%', '100%'],
+              }),
+              height: backgroundCart.interpolate({
+                inputRange: [0, 1],
+                outputRange: ['0%', '100%'],
+              }),
+              borderRadius: 100,
+              opacity: backgroundCart.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, 1],
+              }),
+              position: 'absolute',
+              padding: 5,
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: 10,
+              flexDirection: 'row',
+            }}></Animated.View>
+          <View
+            style={{
+              padding: 5,
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexDirection: 'row',
+            }}>
+            <MaterialCommunityIcons
+              name="check-bold"
+              style={{marginRight: 7}}
+              color="#273c75"
+              size={20}
+            />
+            <Text
+              style={{
+                color: '#273c75',
+                fontWeight: 'bold',
+                textTransform: 'uppercase',
+              }}>
+              Checkout
+            </Text>
+          </View>
+        </Pressable>
+      </View>
     </View>
   );
 };
