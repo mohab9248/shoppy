@@ -41,7 +41,7 @@ const CategoryProductList = () => {
         contentContainerStyle={{padding: 10, backgroundColor: '#30336b'}}
         data={products}
         renderItem={({item, index}) => (
-          <ProductThumbnail item={item} index={index - 1} />
+          <ProductThumbnail category item={item} index={index - 1} />
         )}
       />
     </View>
