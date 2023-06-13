@@ -11,31 +11,56 @@ import {
 import {useContext, useEffect, useRef, useState} from 'react';
 import {CartContext} from '../navigators/NavBar';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useNavigation} from '@react-navigation/native';
+import RouteNames from '../constants/routeNames';
 
 function CartItem({item, deleteItem}) {
   const {width} = useWindowDimensions();
+  const {navigate} = useNavigation();
   return (
-    <View
+    <Pressable
+      onPress={() => {
+        // navigate(RouteNames.PRODUCTS_DETAILS, item, );
+        navigate({
+          name: RouteNames.PRODUCTS_DETAILS,
+          params: item,
+          key: Math.random(0, 1) + '',
+        });
+      }}
       style={{
         width: width,
         backgroundColor: '#130f40',
         flexDirection: 'row',
-        margin: 1,
+        marginTop: 5,
+        padding: 5,
         borderWidth: 4,
         borderColor: '#130f40',
         borderRadius: 7,
       }}>
-      <View style={{}}>
+      <View
+        style={{
+          overflow: 'hidden',
+          borderRadius: 7,
+        }}>
         <Image
           style={{
             width: 95,
             height: 95,
-            borderRadius: 7,
           }}
           resizeMode="cover"
           source={{uri: item.image}}
         />
-        <Text style={{fontWeight: 'bold', textAlign: 'center', color: 'white'}}>
+        <Text
+          style={{
+            fontWeight: 'bold',
+            textAlign: 'center',
+            color: 'black',
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: '#ffffff77',
+          }}>
           {item.price}$
         </Text>
       </View>
@@ -54,12 +79,12 @@ function CartItem({item, deleteItem}) {
         onPress={deleteItem}>
         <MaterialCommunityIcons name="delete" color={'red'} size={32} />
       </Pressable>
-    </View>
+    </Pressable>
   );
 }
 const CartPage = ({setCart, ...rest}) => {
-  const backgroundCart = new Animated.Value(0);
-
+  const backgroundCart = useRef(new Animated.Value(0))?.current;
+  const {navigate} = useNavigation();
   const [i, setI] = useState(false);
   useEffect(() => {
     setI(!i);
@@ -67,7 +92,7 @@ const CartPage = ({setCart, ...rest}) => {
 
   const cartItems = useContext(CartContext);
 
-  const totalPrice = cartItems.reduce(
+  let totalPrice = cartItems.reduce(
     (accumulator, current) => accumulator + current.price,
     0,
   );
@@ -162,31 +187,25 @@ const CartPage = ({setCart, ...rest}) => {
           backgroundColor: '#4a69bd',
           height: 35,
           alignItems: 'center',
+          justifyContent: 'space-between',
           flexDirection: 'row',
         }}>
-        <View>
-          <Text
-            style={{
-              fontSize: 17,
-              marginLeft: 5,
-              color: 'black',
-            }}>
-            {cartItems.length} items
-          </Text>
-        </View>
-        <View
+        <Text
           style={{
-            justifyContent: 'flex-end',
-            marginLeft: 'auto',
+            fontSize: 17,
+            marginLeft: 5,
+            color: 'black',
           }}>
-          <Text
-            style={{
-              fontSize: 17,
-              color: 'black',
-            }}>
-            Total: {totalPrice}$
-          </Text>
-        </View>
+          {cartItems.length} items
+        </Text>
+        <Text
+          style={{
+            fontSize: 17,
+            color: 'black',
+          }}>
+          Total:{' '}
+          {`${totalPrice}`?.substring(0, `${totalPrice}`?.indexOf('.') + 4)}$
+        </Text>
       </View>
       <View
         style={{
@@ -203,7 +222,7 @@ const CartPage = ({setCart, ...rest}) => {
               easing: Easing.bounce,
               useNativeDriver: false,
             }).start();
-            console.log('hello');
+            navigate(RouteNames.CHECKOUT);
           }}
           style={{
             backgroundColor: '#2980b9',
