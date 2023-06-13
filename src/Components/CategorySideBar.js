@@ -17,7 +17,7 @@ function CategorySideBar(props) {
         return (
           <Pressable
             onPress={changeCategory(s)}
-            key={index}
+            key={index + ''}
             style={{
               flex: 1,
               textAlign: 'center',
