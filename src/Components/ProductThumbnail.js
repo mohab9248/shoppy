@@ -5,6 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 
 export default function ProductThumbnail({
   item,
+  category = false,
   index,
   containerStyle,
   imageStyle,
@@ -14,7 +15,15 @@ export default function ProductThumbnail({
   return (
     <Pressable
       onPress={() => {
-        navigation.navigate(RouteNames.PRODUCTS_DETAILS, {id: item.id});
+        navigation.navigate(
+          category
+            ? RouteNames.CATEGORY_PRODUCTS_DETAILS
+            : RouteNames.PRODUCTS_DETAILS,
+          // RouteNames[
+          //   category ? 'CATEGORY_PRODUCT_DETAILS' : 'PRODUCTS_DETAILS'
+          // ],
+          {id: item.id},
+        );
       }}
       style={{
         width: 100,

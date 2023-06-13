@@ -87,6 +87,7 @@ function ProductDetails(props) {
         }}>
         <View style={{width: width, maxHeight: width}}>
           <FlatList
+            keyExtractor={(item, index) => '' + index}
             showsHorizontalScrollIndicator={false}
             horizontal
             pagingEnabled={true}
@@ -120,6 +121,7 @@ function ProductDetails(props) {
             }}>
             {images.map((s, index) => (
               <View
+                key={index}
                 style={{
                   width: 10,
                   height: 10,
