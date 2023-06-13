@@ -8,7 +8,8 @@ import RouteNames from '../constants/routeNames';
 import {createStackNavigator} from '@react-navigation/stack';
 import ProductDetails from '../Components/ProductDetails';
 import {createContext, useState} from 'react';
-
+import CheckoutForm from '../Components/CheckoutForm';
+import Search from '../Components/Search';
 export const CartContext = createContext([]);
 
 const Tab = createBottomTabNavigator();
@@ -31,6 +32,10 @@ function ProductsNav({setCart, ...others}) {
       />
       <Stack.Screen name={RouteNames.PRODUCTS_DETAILS}>
         {props => <ProductDetails setCart={setCart} {...props} />}
+      </Stack.Screen>
+
+      <Stack.Screen name={RouteNames.SEARCH} options={{headerShown: false}}>
+        {props => <Search {...props} />}
       </Stack.Screen>
     </Stack.Navigator>
   );
@@ -71,7 +76,7 @@ function NavBar() {
                 options={{headerShown: false}}
                 component={CategoryPage}
               />
-              <Stack.Screen name={RouteNames.PRODUCTS_DETAILS}>
+              <Stack.Screen name={RouteNames.CATEGORY_PRODUCTS_DETAILS}>
                 {props => <ProductDetails setCart={setCart} {...props} />}
               </Stack.Screen>
             </Stack.Navigator>
@@ -86,7 +91,18 @@ function NavBar() {
               <MaterialCommunityIcons name="cart" color={color} size={26} />
             ),
           }}>
-          {props => <CartPage setCart={setCart} {...props} />}
+          {props => (
+            <Stack.Navigator>
+              <Stack.Screen
+                name={RouteNames.CART}
+                options={{headerShown: false}}>
+                {props => <CartPage setCart={setCart} {...props} />}
+              </Stack.Screen>
+              <Stack.Screen name={RouteNames.CHECKOUT}>
+                {props => <CheckoutForm {...props} />}
+              </Stack.Screen>
+            </Stack.Navigator>
+          )}
         </Tab.Screen>
         <Tab.Screen
           name={RouteNames.ACCOUNT}
