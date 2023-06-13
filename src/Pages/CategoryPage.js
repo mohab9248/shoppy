@@ -70,6 +70,7 @@ const CategoryPage = () => {
         data={products}
         renderItem={({item, index}) => (
           <ProductThumbnail
+            category
             containerStyle={{
               width: 100,
               height: 160,
