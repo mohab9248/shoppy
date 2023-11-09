@@ -1,16 +1,20 @@
-import {
-  Text,
-  View,
-  StyleSheet,
-  Linking,
-  useWindowDimensions,
-} from 'react-native';
+import {Text, View, StyleSheet, Pressable} from 'react-native';
 import {TextInput, Button} from 'react-native-paper';
 import {useState} from 'react';
-
+import {useNavigation} from '@react-navigation/native';
+import RouteNames from '../constants/routeNames';
+import axios from 'axios';
+const LOGIN_ENDPOINT = 'https:/localhost:5000/api/auth/login';
 const AccountPage = () => {
-  const [text, setText] = useState('');
-
+  const [username, setName] = useState('');
+  const [password, setPassword] = useState('');
+  const navigation = useNavigation();
+  const Login = async () => {
+    await axios.post(LOGIN_ENDPOINT, {
+      username: username,
+      password: password,
+    });
+  };
   return (
     <View
       style={{
@@ -21,22 +25,19 @@ const AccountPage = () => {
       }}>
       <TextInput
         style={styles.TextInput}
-        mode="outlined"
-        label="Email"
-        value={text}
-        onChangeText={text => setText(text)}
+        mode="flat"
+        label="username"
+        value={username}
+        onChangeText={username => setName(username)}
       />
       <TextInput
         style={styles.TextInput}
-        mode="outlined"
+        mode="flat"
         label="Password"
-        value={text}
-        onChangeText={text => setText(text)}
+        value={password}
+        onChangeText={password => setPassword(password)}
       />
-      <Button
-        mode="contained"
-        onPress={() => console.log('Pressed')}
-        style={{margin: 10}}>
+      <Button mode="contained" onPress={() => Login()} style={{margin: 10}}>
         Login
       </Button>
       <View style={styles.lineStyle} />
@@ -49,11 +50,12 @@ const AccountPage = () => {
           }}>
           Don't have an account?
         </Text>
-        <Text
-          style={{color: 'blue'}}
-          onPress={() => Linking.openURL('http://google.com')}>
-          SignUp
-        </Text>
+        <Pressable
+          onPress={() => {
+            navigation.navigate(RouteNames.SIGNUP);
+          }}>
+          <Text style={{color: 'blue'}}>SignUp</Text>
+        </Pressable>
       </View>
     </View>
   );
