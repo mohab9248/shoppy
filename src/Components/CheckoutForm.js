@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, PermissionsAndroid, Pressable} from 'react-native';
+import {View, Text, PermissionsAndroid, Pressable, Alert} from 'react-native';
 import {TextInput, Button} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import Geolocation from '@react-native-community/geolocation';
@@ -38,10 +38,14 @@ const requestLocationPermission = async setRegion => {
     return location;
   }
 };
-
+const ShowAlert = () => {
+  Alert.alert('Your Order Has Been Submited');
+};
 function CheckoutForm() {
   const [region, setRegion] = useState(null);
   const [address, setAddress] = useState(null);
+  const [FirstName, setFirstName] = useState();
+  const [LastName, setLastName] = useState();
   const getCurrentLocation = async () => {
     const Location = await requestLocationPermission(setRegion);
   };
@@ -57,11 +61,21 @@ function CheckoutForm() {
           style={{margin: 5, width: 170, justifyContent: 'center'}}
           mode="outlined"
           label=" First Name"
+          autoCapitalize="words"
+          value={FirstName}
+          onChangeText={() => {
+            setFirstName(FirstName);
+          }}
         />
         <TextInput
           style={{margin: 5, width: 170, justifyContent: 'center'}}
           mode="outlined"
           label=" Last Name"
+          autoCapitalize="words"
+          value={LastName}
+          onChangeText={() => {
+            setLastName(LastName);
+          }}
         />
       </View>
       <View style={{borderWidth: 3, borderRadius: 2, borderColor: 'white'}}>
@@ -94,7 +108,10 @@ function CheckoutForm() {
           alignSelf: 'center',
           marginTop: 35,
         }}>
-        <Pressable onPress={() => console.log('pressed')}>
+        <Pressable
+          onPress={() => {
+            ShowAlert(), console.log(LastName);
+          }}>
           <Text
             style={{textTransform: 'uppercase', fontSize: 22, color: 'white'}}>
             Submit
