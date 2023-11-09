@@ -6,7 +6,6 @@ import ProductThumbnail from '../Components/ProductThumbnail';
 import RouteNames from '../constants/routeNames';
 import CategorySeperator from '../Components/CategorySeperator';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useNavigation} from '@react-navigation/native';
 
 const PRODUCTS_ENDPOINT = 'https://fakestoreapi.com/products';
 
@@ -17,7 +16,7 @@ const HomePage = ({navigation}) => {
     try {
       const products = await axios({url: PRODUCTS_ENDPOINT, method: 'get'});
       setProducts(products.data);
-      console.log(products);
+
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -27,6 +26,7 @@ const HomePage = ({navigation}) => {
 
   useEffect(() => {
     Products_axios();
+    console.log(products);
   }, []);
 
   if (loading)

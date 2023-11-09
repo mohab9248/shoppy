@@ -119,37 +119,6 @@ const CartPage = ({setCart, ...rest}) => {
             size={32}
           />
         </View>
-        {/* <View
-          style={{
-            backgroundColor: '#4a69bd',
-            height: 35,
-            alignItems: 'center',
-            flexDirection: 'row',
-          }}>
-          <View>
-            <Text
-              style={{
-                fontSize: 17,
-                marginLeft: 5,
-                color: 'black',
-              }}>
-              {cartItems.length} items
-            </Text>
-          </View>
-          <View
-            style={{
-              justifyContent: 'flex-end',
-              marginLeft: 'auto',
-            }}>
-            <Text
-              style={{
-                fontSize: 17,
-                color: 'black',
-              }}>
-              Total: {totalPrice}$
-            </Text>
-          </View>
-        </View> */}
       </View>
     );
   return (

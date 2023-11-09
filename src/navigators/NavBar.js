@@ -10,6 +10,7 @@ import ProductDetails from '../Components/ProductDetails';
 import {createContext, useState} from 'react';
 import CheckoutForm from '../Components/CheckoutForm';
 import Search from '../Components/Search';
+import SignUp from '../Components/SignUp';
 export const CartContext = createContext([]);
 
 const Tab = createBottomTabNavigator();
@@ -57,7 +58,7 @@ function NavBar() {
           {props => <ProductsNav setCart={setCart} {...props} />}
         </Tab.Screen>
         <Tab.Screen
-          name={RouteNames.CATEGORY}
+          name={RouteNames.CATEGORYPAGE}
           options={{
             headerShown: false,
             tabBarLabel: 'Categories',
@@ -83,7 +84,7 @@ function NavBar() {
           )}
         </Tab.Screen>
         <Tab.Screen
-          name={RouteNames.CART}
+          name={RouteNames.CARTPAGE}
           options={{
             headerShown: false,
             tabBarLabel: 'Cart',
@@ -105,16 +106,29 @@ function NavBar() {
           )}
         </Tab.Screen>
         <Tab.Screen
-          name={RouteNames.ACCOUNT}
+          name={RouteNames.ACCOUNTPAGE}
           options={{
             headerShown: false,
             tabBarLabel: 'Account',
             tabBarIcon: ({color}) => (
               <MaterialCommunityIcons name="account" color={color} size={26} />
             ),
-          }}
-          component={AccountPage}
-        />
+          }}>
+          {props => (
+            <Stack.Navigator>
+              <Stack.Screen
+                name={RouteNames.ACCOUNT}
+                options={{headerShown: false}}
+                component={AccountPage}
+              />
+              <Stack.Screen
+                name={RouteNames.SIGNUP}
+                options={{headerShown: false}}>
+                {props => <SignUp {...props} />}
+              </Stack.Screen>
+            </Stack.Navigator>
+          )}
+        </Tab.Screen>
       </Tab.Navigator>
     </CartContext.Provider>
   );
