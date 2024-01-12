@@ -4,16 +4,18 @@ import {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import RouteNames from '../constants/routeNames';
 import axios from 'axios';
-const LOGIN_ENDPOINT = 'https:/localhost:5000/api/auth/login';
+
+const LOGIN_ENDPOINT = 'http://10.0.2.2:4000/user';
 const AccountPage = () => {
   const [username, setName] = useState('');
   const [password, setPassword] = useState('');
   const navigation = useNavigation();
+
   const Login = async () => {
-    await axios.post(LOGIN_ENDPOINT, {
-      username: username,
-      password: password,
-    });
+    const response = await axios.get(LOGIN_ENDPOINT);
+    const users = response.data;
+    if (users.email === username && users.password) {
+    }
   };
   return (
     <View
@@ -37,7 +39,13 @@ const AccountPage = () => {
         value={password}
         onChangeText={password => setPassword(password)}
       />
-      <Button mode="contained" onPress={() => Login()} style={{margin: 10}}>
+      <Button
+        mode="contained"
+        onPress={() => {
+          Login();
+          navigation.navigate(RouteNames.USER);
+        }}
+        style={{margin: 10}}>
         Login
       </Button>
       <View style={styles.lineStyle} />

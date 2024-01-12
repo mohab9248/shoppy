@@ -15,8 +15,10 @@ import {useNavigation} from '@react-navigation/native';
 import RouteNames from '../constants/routeNames';
 
 function CartItem({item, deleteItem}) {
+  const endpoint = 'http://10.0.2.2:4000/';
   const {width} = useWindowDimensions();
   const {navigate} = useNavigation();
+  const [quantity, setQuantity] = useState(1);
   return (
     <Pressable
       onPress={() => {
@@ -48,7 +50,7 @@ function CartItem({item, deleteItem}) {
             height: 95,
           }}
           resizeMode="cover"
-          source={{uri: item.image}}
+          source={{uri: endpoint + item.image[0]}}
         />
         <Text
           style={{
@@ -67,12 +69,49 @@ function CartItem({item, deleteItem}) {
       <View style={{flex: 1, padding: 10}}>
         <View>
           <Text numberOfLines={2} style={{color: 'white'}}>
-            {item.title}
+            {item.name}
           </Text>
         </View>
         <Text numberOfLines={2} ellipsizeMode="tail" style={{color: 'grey'}}>
           {item.description}
         </Text>
+        <View style={{flexDirection: 'row'}}>
+          <Pressable
+            onPress={() => {
+              if (quantity > 1) setQuantity(quantity - 1);
+            }}>
+            <MaterialCommunityIcons
+              name="minus"
+              color={'black'}
+              size={20}
+              style={{
+                backgroundColor: 'white',
+                borderRadius: 20,
+                marginRight: 5,
+                marginTop: 5,
+              }}
+            />
+          </Pressable>
+          <Text style={{color: 'white', marginTop: 5, marginHorizontal: 5}}>
+            {quantity}
+          </Text>
+          <Pressable
+            onPress={() => {
+              setQuantity(quantity + 1);
+            }}>
+            <MaterialCommunityIcons
+              name="plus"
+              color={'black'}
+              size={20}
+              style={{
+                backgroundColor: 'white',
+                borderRadius: 20,
+                marginLeft: 5,
+                marginTop: 5,
+              }}
+            />
+          </Pressable>
+        </View>
       </View>
       <Pressable
         style={{justifyContent: 'center', alignItems: 'center'}}
@@ -82,12 +121,13 @@ function CartItem({item, deleteItem}) {
     </Pressable>
   );
 }
-const CartPage = ({setCart, ...rest}) => {
+const CartPage = ({setCart}) => {
   const backgroundCart = useRef(new Animated.Value(0))?.current;
   const {navigate} = useNavigation();
   const [i, setI] = useState(false);
   useEffect(() => {
     setI(!i);
+    console.log(cartItems);
   }, [cartItems]);
 
   const cartItems = useContext(CartContext);
@@ -172,7 +212,7 @@ const CartPage = ({setCart, ...rest}) => {
             fontSize: 17,
             color: 'black',
           }}>
-          Total:{' '}
+          Total:
           {`${totalPrice}`?.substring(0, `${totalPrice}`?.indexOf('.') + 4)}$
         </Text>
       </View>

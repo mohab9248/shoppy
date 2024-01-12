@@ -11,6 +11,7 @@ import {createContext, useState} from 'react';
 import CheckoutForm from '../Components/CheckoutForm';
 import Search from '../Components/Search';
 import SignUp from '../Components/SignUp';
+import User from '../Components/User';
 export const CartContext = createContext([]);
 
 const Tab = createBottomTabNavigator();
@@ -125,6 +126,11 @@ function NavBar() {
                 name={RouteNames.SIGNUP}
                 options={{headerShown: false}}>
                 {props => <SignUp {...props} />}
+              </Stack.Screen>
+              <Stack.Screen
+                name={RouteNames.USER}
+                options={{headerShown: false}}>
+                {props => <User {...props} />}
               </Stack.Screen>
             </Stack.Navigator>
           )}

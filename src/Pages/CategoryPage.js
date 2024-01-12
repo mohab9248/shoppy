@@ -5,24 +5,27 @@ import {useEffect, useState} from 'react';
 import ProductThumbnail from '../Components/ProductThumbnail';
 import CategorySideBar from '../Components/CategorySideBar';
 const {width, height} = Dimensions.get('window');
-const PRODUCTS_ENDPOINT = 'https://fakestoreapi.com/products/category/';
+const PRODUCTS_ENDPOINT = 'http://10.0.2.2:4000/productByCategories/';
 const CategoryPage = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const getCategories = async () => {
     const cats = await axios({
-      url: 'https://fakestoreapi.com/products/categories',
+      url: 'http://10.0.2.2:4000/getAllCategory',
       method: 'get',
     });
     setCategories(cats.data);
     cats.data.length &&
       selectedCategory == null &&
-      setSelectedCategory(cats.data?.[0]);
+      setSelectedCategory(cats.data);
   };
-
   const getProducts = async () => {
     // setLoading(true);
     const products = await axios({
-      url: PRODUCTS_ENDPOINT + selectedCategory,
+      url:
+        PRODUCTS_ENDPOINT +
+        selectedCategory.map(s => {
+          return s._id;
+        }),
       method: 'get',
     });
 

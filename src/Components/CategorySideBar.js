@@ -28,7 +28,7 @@ function CategorySideBar(props) {
               backgroundColor: s == selectedCategory ? '#30336b' : '#130f40',
             }}>
             <Text style={styles.Text} numberOfLines={2} adjustsFontSizeToFit>
-              {s}
+              {s.name}
             </Text>
           </Pressable>
         );

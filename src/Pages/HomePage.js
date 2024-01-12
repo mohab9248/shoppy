@@ -7,7 +7,7 @@ import RouteNames from '../constants/routeNames';
 import CategorySeperator from '../Components/CategorySeperator';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const PRODUCTS_ENDPOINT = 'https://fakestoreapi.com/products';
+const PRODUCTS_ENDPOINT = 'http://10.0.2.2:4000/product';
 
 const HomePage = ({navigation}) => {
   const [products, setProducts] = useState([]);
@@ -26,7 +26,6 @@ const HomePage = ({navigation}) => {
 
   useEffect(() => {
     Products_axios();
-    console.log(products);
   }, []);
 
   if (loading)
@@ -97,7 +96,7 @@ const HomePage = ({navigation}) => {
           style={{flex: 1}}
           horizontal
           contentContainerStyle={{padding: 10}}
-          data={products.slice(10, 20)}
+          data={products.slice(5, 15)}
           renderItem={({item, index}) => (
             <ProductThumbnail item={item} index={index} />
           )}

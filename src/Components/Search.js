@@ -5,7 +5,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {useNavigation} from '@react-navigation/native';
 import RouteNames from '../constants/routeNames';
 
-const PRODUCTS_ENDPOINT = 'https://fakestoreapi.com/products';
+const PRODUCTS_ENDPOINT = 'http://10.0.2.2:4000/product';
+const endpoint = 'http://10.0.2.2:4000/';
 const Search = () => {
   const navigation = useNavigation();
   const [search, setSearch] = useState('');
@@ -28,9 +29,7 @@ const Search = () => {
       // Filter the masterDataSource and update FilteredDataSource
       const newData = masterDataSource.filter(item => {
         // Applying filter for the inserted text in search bar
-        const itemData = item.title
-          ? item.title.toUpperCase()
-          : ''.toUpperCase();
+        const itemData = item.name ? item.name.toUpperCase() : ''.toUpperCase();
         const textData = text.toUpperCase();
         return itemData.indexOf(textData) > -1;
       });
@@ -71,12 +70,14 @@ const Search = () => {
         style={{flex: 1}}
         contentContainerStyle={{padding: 10}}
         data={filteredDataSource}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item._id}
         renderItem={({item}) => {
           return (
             <Pressable
               onPress={() => {
-                navigation.navigate(RouteNames.PRODUCTS_DETAILS, {id: item.id});
+                navigation.navigate(RouteNames.PRODUCTS_DETAILS, {
+                  _id: item._id,
+                });
               }}>
               <View
                 style={{
@@ -88,7 +89,7 @@ const Search = () => {
                 }}>
                 <Image
                   resizeMode="contain"
-                  source={{uri: item.image}}
+                  source={{uri: endpoint + item.image}}
                   style={{width: 50, height: 50, borderRadius: 25}}
                 />
                 <View style={{paddingLeft: 5}}>
@@ -96,7 +97,7 @@ const Search = () => {
                     style={{textTransform: 'lowercase'}}
                     numberOfLines={2}
                     ellipsizeMode="tail">
-                    {item.title.toUpperCase()}
+                    {item.name.toUpperCase()}
                   </Text>
                   <Text style={{fontWeight: 'bold'}}>{item.price}$</Text>
                 </View>

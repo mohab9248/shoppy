@@ -3,8 +3,6 @@ import {useEffect, useState} from 'react';
 import {TextInput, Button} from 'react-native-paper';
 import axios from 'axios';
 
-const USERS_ENDPOINT = 'https://localhost:4000/register';
-
 export default function SignUp() {
   const [FirstName, setFirstName] = useState('');
   const [LastName, setLastName] = useState('');
@@ -12,20 +10,23 @@ export default function SignUp() {
   const [Password, setPassword] = useState('');
   const [Phone, setPhone] = useState('');
 
+  const USERS_ENDPOINT = 'http://10.0.2.2:4000/register';
   const handleSubmit = async () => {
     try {
       const response = await axios.post(
         USERS_ENDPOINT,
-        JSON.stringify({
+        {
           firstName: FirstName,
           lastName: LastName,
           email: Email,
           phoneNumber: Phone,
           password: Password,
-        }),
+        },
         {
-          Accept: 'application/json',
-          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+          },
         },
       );
       console.log(response);
@@ -52,14 +53,14 @@ export default function SignUp() {
           mode="flat"
           label="First Name"
           value={FirstName}
-          onChangeText={FirstName => setFirstName(FirstName)}
+          onChangeText={FirstName => setFirstName(FirstName.toString())}
         />
         <TextInput
           style={styles.TextInput}
           mode="flat"
           label="Last Name"
           value={LastName}
-          onChangeText={LastName => setLastName(LastName)}
+          onChangeText={LastName => setLastName(LastName.toString())}
         />
       </View>
       <View style={{flexDirection: 'row', justifyContent: 'center'}}>
@@ -68,7 +69,7 @@ export default function SignUp() {
           mode="flat"
           label="Email"
           value={Email}
-          onChangeText={Email => setEmail(Email)}
+          onChangeText={Email => setEmail(Email.toString())}
         />
         <TextInput
           style={styles.TextInput}
@@ -76,7 +77,7 @@ export default function SignUp() {
           label="Password"
           secureTextEntry
           value={Password}
-          onChangeText={Password => setPassword(Password)}
+          onChangeText={Password => setPassword(Password.toString())}
         />
       </View>
       <View style={{flexDirection: 'row', justifyContent: 'center'}}>
@@ -85,7 +86,7 @@ export default function SignUp() {
           mode="flat"
           label="Phone"
           value={Phone}
-          onChangeText={Phone => setPhone(Phone)}
+          onChangeText={Phone => setPhone(Phone.toString())}
         />
       </View>
       <View style={{flexDirection: 'row', justifyContent: 'center'}}>

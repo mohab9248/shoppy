@@ -16,41 +16,59 @@ import {useRoute} from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {CartContext} from '../navigators/NavBar';
 function ProductDetails(props) {
+  const endpoint = 'http://10.0.2.2:4000/';
   const {setCart} = props;
+  const [quant, setQuant] = useState(1);
   const {width} = useWindowDimensions();
   const [scrolledIndex, setScrolledIndex] = useState(0);
   const [productDetails, setProductDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const cart = useContext(CartContext);
+  const [categories, setCategories] = useState([]);
   // const backgroundColourIndex = new Animated.Value(0);
   // const backgroundCart = new Animated.Value(0);
   const backgroundCart = useRef(new Animated.Value(0)).current;
+  const getCategories = async () => {
+    const cats = await axios({
+      url: 'http://10.0.2.2:4000/getAllCategory',
+      method: 'get',
+    });
 
+    const categs = () => {
+      return cats.data.map(res => {
+        return res._id;
+      });
+    };
+
+    console.log(categs());
+  };
   const {
-    params: {id},
+    params: {_id},
   } = useRoute();
   const getProductDetails = async () => {
     // setLoading(true);
     const product = await axios({
-      url: `https://fakestoreapi.com/products/${id}`,
+      url: `http://10.0.2.2:4000/product/${_id}`,
       method: 'get',
     });
-    product.data.images = [
+    product.data.image = [
       product.data.image,
       product.data.image,
       product.data.image,
     ];
-    if (cart.find(({id}) => id == product.data.id)) {
+    if (cart.find(({_id}) => _id == product.data._id)) {
       backgroundCart.setValue(1);
     }
+
     setProductDetails(product.data);
     setLoading(false);
   };
 
   useEffect(() => {
+    getCategories();
     getProductDetails();
   }, []);
-  console.log(id);
+
   const onViewChanged = useRef(({viewableItems}) => {
     console.log('Items ', viewableItems);
     if (viewableItems.length > 0) {
@@ -61,6 +79,7 @@ function ProductDetails(props) {
 
   const addToCart = p => () => {
     setCart(cart => [...cart, p]);
+
     Animated.timing(backgroundCart, {
       toValue: 1,
       duration: 1000,
@@ -68,8 +87,7 @@ function ProductDetails(props) {
       useNativeDriver: false,
     }).start();
   };
-  const {title, price, description, category, image, images} =
-    productDetails || {};
+
   if (loading)
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -92,7 +110,7 @@ function ProductDetails(props) {
             horizontal
             pagingEnabled={true}
             style={{width: '100%', maxHeight: width}}
-            data={images}
+            data={productDetails.image}
             viewabilityConfig={{
               waitForInteraction: true,
               viewAreaCoveragePercentThreshold: 60,
@@ -100,7 +118,7 @@ function ProductDetails(props) {
             onViewableItemsChanged={onViewChanged?.current}
             renderItem={({item}) => (
               <Image
-                source={{uri: item}}
+                source={{uri: endpoint + item}}
                 resizeMode="contain"
                 style={{width: width, height: width * 0.8}}
               />
@@ -119,7 +137,7 @@ function ProductDetails(props) {
               alignItems: 'center',
               justifyContent: 'center',
             }}>
-            {images.map((s, index) => (
+            {productDetails.image.map((s, index) => (
               <View
                 key={index}
                 style={{
@@ -151,19 +169,66 @@ function ProductDetails(props) {
               style={{
                 fontWeight: '900',
               }}>
-              {title}
+              {productDetails.name}
             </Text>
           </View>
           <View>
-            <Text>{description}</Text>
+            <Text>{productDetails.description}</Text>
           </View>
           <View>
             <Text
               style={{
                 fontWeight: '900',
               }}>
-              {price}$
+              {productDetails.price}$
             </Text>
+          </View>
+          <View style={{flexDirection: 'row'}}>
+            <Text
+              style={{
+                marginRight: 5,
+                marginTop: 5,
+                fontWeight: 'bold',
+              }}>
+              Quantity:
+            </Text>
+            <Pressable
+              onPress={() => {
+                if (quant > 1) {
+                  setQuant(quant - 1);
+                }
+              }}>
+              <MaterialCommunityIcons
+                name="minus"
+                color={'black'}
+                size={17}
+                style={{
+                  backgroundColor: 'white',
+                  borderRadius: 20,
+                  marginRight: 5,
+                  marginTop: 5,
+                }}
+              />
+            </Pressable>
+            <Text style={{color: 'black', marginTop: 5, marginHorizontal: 5}}>
+              {quant}
+            </Text>
+            <Pressable
+              onPress={() => {
+                setQuant(quant + 1);
+              }}>
+              <MaterialCommunityIcons
+                name="plus"
+                color={'black'}
+                size={17}
+                style={{
+                  backgroundColor: 'white',
+                  borderRadius: 20,
+                  marginLeft: 5,
+                  marginTop: 5,
+                }}
+              />
+            </Pressable>
           </View>
         </View>
       </ScrollView>

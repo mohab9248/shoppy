@@ -11,6 +11,7 @@ export default function ProductThumbnail({
   imageStyle,
   textStyle,
 }) {
+  const endpoint = 'http://10.0.2.2:4000/';
   const navigation = useNavigation();
   return (
     <Pressable
@@ -22,7 +23,7 @@ export default function ProductThumbnail({
           // RouteNames[
           //   category ? 'CATEGORY_PRODUCT_DETAILS' : 'PRODUCTS_DETAILS'
           // ],
-          {id: item.id},
+          {_id: item._id},
         );
       }}
       style={{
@@ -43,13 +44,15 @@ export default function ProductThumbnail({
           ...imageStyle,
         }}
         resizeMode="cover"
-        source={{uri: item.image}}
+        source={{
+          uri: endpoint + item.image,
+        }}
       />
       <Text
         style={{fontSize: 15, fontWeight: 'bold', ...textStyle}}
         numberOfLines={2}
         ellipsizeMode="tail">
-        {item.title}
+        {item.name}
       </Text>
       <Text numberOfLines={1}>
         {item.price}

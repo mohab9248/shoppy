@@ -13,5 +13,6 @@ const RouteNames = {
   CHECKOUT: 'Checkout',
   SEARCH: 'Search',
   SIGNUP: 'SignUp',
+  USER: 'user',
 };
 export default RouteNames;
