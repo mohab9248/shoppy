@@ -15,16 +15,19 @@ import axios from 'axios';
 import {useRoute} from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {CartContext} from '../navigators/NavBar';
-function ProductDetails(props) {
+import {useNavigation} from '@react-navigation/native';
+import RouteNames from '../constants/routeNames';
+function ProductDetails({setCart, route, navigation}) {
   const endpoint = 'http://10.0.2.2:4000/';
-  const {setCart} = props;
-  const [quant, setQuant] = useState(1);
+
   const {width} = useWindowDimensions();
   const [scrolledIndex, setScrolledIndex] = useState(0);
   const [productDetails, setProductDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const cart = useContext(CartContext);
+  const [quant, setQuant] = useState(1);
   const [categories, setCategories] = useState([]);
+
   // const backgroundColourIndex = new Animated.Value(0);
   // const backgroundCart = new Animated.Value(0);
   const backgroundCart = useRef(new Animated.Value(0)).current;
@@ -61,6 +64,8 @@ function ProductDetails(props) {
     }
 
     setProductDetails(product.data);
+    setQuant(product.data.quantity);
+    console.log(product.data);
     setLoading(false);
   };
 
@@ -76,7 +81,10 @@ function ProductDetails(props) {
       setScrolledIndex(index);
     }
   });
-
+  useEffect(() => {
+    // Update the params when quantity changes
+    navigation.setParams({quant});
+  }, [quant, navigation]);
   const addToCart = p => () => {
     setCart(cart => [...cart, p]);
 
@@ -240,7 +248,7 @@ function ProductDetails(props) {
           padding: 10,
         }}>
         <Pressable
-          disabled={!!cart.find(({id}) => id === productDetails?.id)}
+          disabled={!!cart.find(({_id}) => _id === productDetails?._id)}
           style={{
             backgroundColor: '#d35400',
             width: '70%',

@@ -16,7 +16,7 @@ const HomePage = ({navigation}) => {
     try {
       const products = await axios({url: PRODUCTS_ENDPOINT, method: 'get'});
       setProducts(products.data);
-
+      console.log(products.data);
       setLoading(false);
     } catch (error) {
       console.log(error);

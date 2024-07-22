@@ -4,7 +4,8 @@ import {TextInput, Button} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import Geolocation from '@react-native-community/geolocation';
 import MapView, {Marker} from 'react-native-maps';
-
+import {CartContext} from '../navigators/NavBar';
+import {useContext} from 'react';
 const requestLocationPermission = async setRegion => {
   let location = null;
   try {
@@ -44,40 +45,21 @@ const ShowAlert = () => {
 function CheckoutForm() {
   const [region, setRegion] = useState(null);
   const [address, setAddress] = useState(null);
-  const [FirstName, setFirstName] = useState();
-  const [LastName, setLastName] = useState();
+
   const getCurrentLocation = async () => {
     const Location = await requestLocationPermission(setRegion);
   };
   useEffect(() => {
     getCurrentLocation();
   }, []);
-
+  const cartItems = useContext(CartContext);
+  let totalPrice = cartItems.reduce(
+    (accumulator, current) => accumulator + current.price,
+    0,
+  );
   const navigate = useNavigation();
   return (
     <View>
-      <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-        <TextInput
-          style={{margin: 5, width: 170, justifyContent: 'center'}}
-          mode="outlined"
-          label=" First Name"
-          autoCapitalize="words"
-          value={FirstName}
-          onChangeText={() => {
-            setFirstName(FirstName);
-          }}
-        />
-        <TextInput
-          style={{margin: 5, width: 170, justifyContent: 'center'}}
-          mode="outlined"
-          label=" Last Name"
-          autoCapitalize="words"
-          value={LastName}
-          onChangeText={() => {
-            setLastName(LastName);
-          }}
-        />
-      </View>
       <View style={{borderWidth: 3, borderRadius: 2, borderColor: 'white'}}>
         {region && (
           <MapView
@@ -97,6 +79,7 @@ function CheckoutForm() {
           </MapView>
         )}
       </View>
+      <Text> {totalPrice} </Text>
       <View
         style={{
           width: 250,
@@ -110,7 +93,7 @@ function CheckoutForm() {
         }}>
         <Pressable
           onPress={() => {
-            ShowAlert(), console.log(LastName);
+            ShowAlert();
           }}>
           <Text
             style={{textTransform: 'uppercase', fontSize: 22, color: 'white'}}>

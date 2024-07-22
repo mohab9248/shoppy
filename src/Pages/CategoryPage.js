@@ -35,7 +35,7 @@ const CategoryPage = () => {
 
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getCategories();
@@ -94,4 +94,3 @@ const CategoryPage = () => {
 };
 
 export default CategoryPage;
-0;
