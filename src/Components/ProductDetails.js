@@ -108,8 +108,8 @@ function ProductDetails({setCart, route, navigation}) {
       <ScrollView
         style={{flex: 1}}
         contentContainerStyle={{
-          alignItems: 'center',
-          justifyContent: 'center',
+          alignItems: 'flex-start',
+          justifyContent: 'flex-start',
         }}>
         <View style={{width: width, maxHeight: width}}>
           <FlatList
@@ -171,72 +171,37 @@ function ProductDetails({setCart, route, navigation}) {
         <View
           style={{
             padding: 10,
+            margin: 5,
           }}>
-          <View>
+          <View
+            style={{
+              margin: 3,
+            }}>
             <Text
               style={{
                 fontWeight: '900',
+                fontSize: 18,
               }}>
               {productDetails.name}
             </Text>
           </View>
-          <View>
+          <View
+            style={{
+              margin: 3,
+            }}>
             <Text>{productDetails.description}</Text>
           </View>
-          <View>
+          <View
+            style={{
+              margin: 3,
+            }}>
             <Text
               style={{
                 fontWeight: '900',
+                fontSize: 18,
               }}>
               {productDetails.price}$
             </Text>
-          </View>
-          <View style={{flexDirection: 'row'}}>
-            <Text
-              style={{
-                marginRight: 5,
-                marginTop: 5,
-                fontWeight: 'bold',
-              }}>
-              Quantity:
-            </Text>
-            <Pressable
-              onPress={() => {
-                if (quant > 1) {
-                  setQuant(quant - 1);
-                }
-              }}>
-              <MaterialCommunityIcons
-                name="minus"
-                color={'black'}
-                size={17}
-                style={{
-                  backgroundColor: 'white',
-                  borderRadius: 20,
-                  marginRight: 5,
-                  marginTop: 5,
-                }}
-              />
-            </Pressable>
-            <Text style={{color: 'black', marginTop: 5, marginHorizontal: 5}}>
-              {quant}
-            </Text>
-            <Pressable
-              onPress={() => {
-                setQuant(quant + 1);
-              }}>
-              <MaterialCommunityIcons
-                name="plus"
-                color={'black'}
-                size={17}
-                style={{
-                  backgroundColor: 'white',
-                  borderRadius: 20,
-                  marginLeft: 5,
-                  marginTop: 5,
-                }}
-              />
-            </Pressable>
           </View>
         </View>
       </ScrollView>

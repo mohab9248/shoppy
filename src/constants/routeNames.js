@@ -14,5 +14,6 @@ const RouteNames = {
   SEARCH: 'Search',
   SIGNUP: 'SignUp',
   USER: 'user',
+  Profile: 'ProfilePage',
 };
 export default RouteNames;

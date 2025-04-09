@@ -1,11 +1,20 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, PermissionsAndroid, Pressable, Alert} from 'react-native';
+import {
+  View,
+  Text,
+  PermissionsAndroid,
+  Pressable,
+  Alert,
+  StyleSheet,
+} from 'react-native';
 import {TextInput, Button} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import Geolocation from '@react-native-community/geolocation';
 import MapView, {Marker} from 'react-native-maps';
 import {CartContext} from '../navigators/NavBar';
 import {useContext} from 'react';
+import {useUser} from '../context/UserContext';
+import RouteNames from '../constants/routeNames';
 const requestLocationPermission = async setRegion => {
   let location = null;
   try {
@@ -43,6 +52,11 @@ const ShowAlert = () => {
   Alert.alert('Your Order Has Been Submited');
 };
 function CheckoutForm() {
+  const {totalCheckout, user} = useUser();
+  const [FullName, setFullName] = useState(
+    user.firstName + ' ' + user.lastName,
+  );
+  const [phone, setPhone] = useState(user.phoneNumber);
   const [region, setRegion] = useState(null);
   const [address, setAddress] = useState(null);
 
@@ -57,15 +71,63 @@ function CheckoutForm() {
     (accumulator, current) => accumulator + current.price,
     0,
   );
-  const navigate = useNavigation();
+
   return (
-    <View>
-      <View style={{borderWidth: 3, borderRadius: 2, borderColor: 'white'}}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: '#d3d3d3',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
+      <View
+        style={{justifyContent: 'center', alignItems: 'center', margin: 10}}>
+        <Text style={{color: 'black', fontSize: 25}}>Fill the Progress</Text>
+      </View>
+      <TextInput
+        style={styles.TextInput}
+        mode="flat"
+        placeholder="Enter your Full name"
+        value={FullName}
+        onChangeText={FullName => setFullName(FullName.toString())}
+      />
+      <Text></Text>
+      <TextInput
+        style={styles.TextInput}
+        mode="flat"
+        placeholder="Enter your number"
+        value={phone}
+        onChangeText={phone => setPhone(phone.toString())}
+      />
+
+      <View
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+        }}>
+        <Text
+          style={{
+            color: 'black',
+            marginTop: 10,
+            fontSize: 17,
+          }}>
+          Please choose Location
+        </Text>
+      </View>
+      <View
+        style={{
+          alignItems: 'center',
+          margin: 20,
+          borderWidth: 3,
+          borderRadius: 2,
+          borderColor: 'white',
+        }}>
         {region && (
           <MapView
             style={{
-              width: '100%',
-              height: 300,
+              justifyContent: 'center',
+              width: 300,
+              height: 200,
             }}
             showsUserLocation={true}
             minZoomLevel={5}
@@ -79,7 +141,18 @@ function CheckoutForm() {
           </MapView>
         )}
       </View>
-      <Text> {totalPrice} </Text>
+      <View
+        style={{
+          display: 'flex',
+        }}>
+        <Text
+          style={{
+            fontSize: 20,
+            color: 'black',
+          }}>
+          Total: {totalCheckout}$
+        </Text>
+      </View>
       <View
         style={{
           width: 250,
@@ -104,5 +177,14 @@ function CheckoutForm() {
     </View>
   );
 }
-
+const styles = StyleSheet.create({
+  TextInput: {
+    margin: 5,
+    height: 40,
+    width: '90%',
+    justifyContent: 'center',
+    borderRadius: 4,
+    padding: 5,
+  },
+});
 export default CheckoutForm;
