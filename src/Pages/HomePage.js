@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
-import {View, FlatList, ScrollView, Pressable} from 'react-native';
+import {View, FlatList, ScrollView, Pressable, StyleSheet} from 'react-native';
 import {ActivityIndicator, Text} from 'react-native-paper';
 import ProductThumbnail from '../Components/ProductThumbnail';
 import RouteNames from '../constants/routeNames';
@@ -8,15 +8,17 @@ import CategorySeperator from '../Components/CategorySeperator';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const PRODUCTS_ENDPOINT = 'http://10.0.2.2:4000/product';
+const CATEGORIES_ENDPOINT = 'http://10.0.2.2:4000/getAllCategory';
 
 const HomePage = ({navigation}) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [categories, setCategories] = useState([]);
+
   const Products_axios = async () => {
     try {
-      const products = await axios({url: PRODUCTS_ENDPOINT, method: 'get'});
-      setProducts(products.data);
-
+      const response = await axios.get(PRODUCTS_ENDPOINT);
+      setProducts(response.data);
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -24,106 +26,114 @@ const HomePage = ({navigation}) => {
     }
   };
 
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get(CATEGORIES_ENDPOINT);
+      setCategories(response.data);
+    } catch (error) {
+      console.log('Error fetching categories', error);
+    }
+  };
+
   useEffect(() => {
     Products_axios();
+    fetchCategories();
   }, []);
 
   if (loading)
     return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <ActivityIndicator />
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#00cec9" />
       </View>
     );
+
   return (
-    <View style={{flex: 1, backgroundColor: '#30336b'}}>
-      <Pressable
-        onPress={() => {
-          navigation.navigate(RouteNames.SEARCH);
-        }}>
-        <View
-          style={{
-            alignSelf: 'center',
-            alignItems: 'center',
-            width: '100%',
-            height: 40,
-            justifyContent: 'center',
-            flexDirection: 'row',
-            backgroundColor: '#2980b9',
-            borderRadius: 5,
-            margin: 1,
-          }}>
-          <MaterialCommunityIcons name="magnify" color={'white'} size={30} />
-          <Text style={{color: 'white', fontSize: 20}}>
-            Search For Products
-          </Text>
+    <View style={styles.container}>
+      {/* Search Bar */}
+      <Pressable onPress={() => navigation.navigate(RouteNames.SEARCH)}>
+        <View style={styles.searchBar}>
+          <MaterialCommunityIcons name="magnify" color={'white'} size={28} />
+          <Text style={styles.searchText}>Search Products</Text>
         </View>
       </Pressable>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={{backgroundColor: '#30336b'}}>
-        <CategorySeperator
-          title="Men"
-          onPress={() => {
-            navigation.navigate(RouteNames.PRODUCTS_LIST, {
-              category: 'Men',
-              name: 'Men',
-            });
-            // after navigation and passing params you have to check the params in the navigated screen
-            // you can either extract the route from props or use the hook useRoute
-          }}
-        />
-        <FlatList
-          showsHorizontalScrollIndicator={false}
-          style={{flex: 1}}
-          horizontal
-          contentContainerStyle={{padding: 10}}
-          data={products.slice(0, 10)}
-          renderItem={({item, index}) => (
-            <ProductThumbnail item={item} index={index - 1} />
-          )}
-        />
-        <CategorySeperator
-          title="Women"
-          onPress={() => {
-            navigation.navigate(RouteNames.PRODUCTS_LIST, {
-              category: 'Women',
-              name: 'Women',
-            });
-          }}
-        />
-        <FlatList
-          showsHorizontalScrollIndicator={false}
-          style={{flex: 1}}
-          horizontal
-          contentContainerStyle={{padding: 10}}
-          data={products.slice(5, 15)}
-          renderItem={({item, index}) => (
-            <ProductThumbnail item={item} index={index} />
-          )}
-        />
 
-        <CategorySeperator
-          title="Kids"
-          onPress={() => {
-            navigation.navigate(RouteNames.PRODUCTS_LIST, {
-              name: 'Kids',
-              category: 'Kids',
-            });
-          }}
-        />
-        <FlatList
-          style={{flex: 1}}
-          horizontal
-          contentContainerStyle={{padding: 10}}
-          showsHorizontalScrollIndicator={false}
-          data={products.slice(0, 10)}
-          renderItem={({item, index}) => (
-            <ProductThumbnail item={item} index={index - 1} />
-          )}
-        />
+      {/* Category Sections */}
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {categories.map(category => {
+          const productsInCategory = products.filter(
+            product =>
+              product.category_id?.name?.toLowerCase?.() ===
+              category.name.toLowerCase(),
+          );
+
+          if (productsInCategory.length === 0) return null;
+
+          return (
+            <View key={category._id} style={styles.categoryContainer}>
+              <CategorySeperator
+                title={category.name}
+                onPress={() => {
+                  navigation.navigate(RouteNames.CATEGORYPAGE, {
+                    categoryId: category._id,
+                    name: category.name,
+                  });
+                }}
+              />
+              <FlatList
+                horizontal
+                data={productsInCategory}
+                showsHorizontalScrollIndicator={false}
+                keyExtractor={item => item._id}
+                contentContainerStyle={styles.productList}
+                renderItem={({item, index}) => (
+                  <ProductThumbnail item={item} index={index} />
+                )}
+              />
+            </View>
+          );
+        })}
       </ScrollView>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+    paddingTop: 10,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  searchBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#0984e3',
+    padding: 10,
+    marginHorizontal: 12,
+    borderRadius: 10,
+    elevation: 3,
+    marginBottom: 12,
+  },
+  searchText: {
+    color: 'white',
+    fontSize: 18,
+    marginLeft: 10,
+    fontWeight: '600',
+  },
+  categoryContainer: {
+    marginBottom: 20,
+    backgroundColor: '#130f40',
+    paddingBottom: 10,
+    borderRadius: 10,
+    marginHorizontal: 10,
+  },
+  productList: {
+    paddingLeft: 10,
+  },
+});
 
 export default HomePage;
