@@ -1,5 +1,5 @@
 import React from 'react';
-import {Pressable, Text, Image} from 'react-native';
+import {Pressable, Text, Image, StyleSheet, View} from 'react-native';
 import RouteNames from '../constants/routeNames';
 import {useNavigation} from '@react-navigation/native';
 
@@ -13,6 +13,7 @@ export default function ProductThumbnail({
 }) {
   const endpoint = 'http://10.0.2.2:4000/';
   const navigation = useNavigation();
+
   return (
     <Pressable
       onPress={() => {
@@ -20,44 +21,63 @@ export default function ProductThumbnail({
           category
             ? RouteNames.CATEGORY_PRODUCTS_DETAILS
             : RouteNames.PRODUCTS_DETAILS,
-          // RouteNames[
-          //   category ? 'CATEGORY_PRODUCT_DETAILS' : 'PRODUCTS_DETAILS'
-          // ],
           {_id: item._id},
         );
       }}
-      style={{
-        width: 100,
-        height: 160,
-        margin: 5,
-        flex: 1,
-        padding: 2.5,
-        borderRadius: 5,
-        backgroundColor: index % 2 ? '#bdc3c7' : '#ecf0f1',
-        ...containerStyle,
-      }}>
+      style={[
+        styles.card,
+        {backgroundColor: index % 2 === 0 ? '#f1f2f6' : '#dfe6e9'},
+        containerStyle,
+      ]}>
       <Image
-        style={{
-          width: 95,
-          height: 95,
-          alignSelf: 'center',
-          ...imageStyle,
-        }}
+        style={[styles.image, imageStyle]}
         resizeMode="cover"
-        source={{
-          uri: endpoint + item.image,
-        }}
+        source={{uri: endpoint + item.image}}
       />
-      <Text
-        style={{fontSize: 15, fontWeight: 'bold', ...textStyle}}
-        numberOfLines={2}
-        ellipsizeMode="tail">
-        {item.name}
-      </Text>
-      <Text numberOfLines={1}>
-        {item.price}
-        <Text style={{fontWeight: 'bold'}}>$</Text>
-      </Text>
+      <View style={styles.details}>
+        <Text
+          numberOfLines={2}
+          ellipsizeMode="tail"
+          style={[styles.name, textStyle]}>
+          {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
+        </Text>
+        <Text style={styles.price}>${item.price}</Text>
+      </View>
     </Pressable>
   );
 }
+
+const styles = StyleSheet.create({
+  card: {
+    width: 120,
+    height: 180,
+    margin: 6,
+    padding: 10,
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: {width: 0, height: 2},
+    shadowRadius: 4,
+    elevation: 3,
+    justifyContent: 'space-between',
+  },
+  image: {
+    width: '100%',
+    height: 100,
+    borderRadius: 8,
+  },
+  details: {
+    marginTop: 8,
+  },
+  name: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#2d3436',
+    marginBottom: 4,
+  },
+  price: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#0984e3',
+  },
+});

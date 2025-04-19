@@ -1,6 +1,6 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import CategoryPage from '../Pages/CategoryPage';
-import AccountPage from '../Pages/AccountPage';
+
 import CartPage from '../Pages/CartPage';
 import HomePage from '../Pages/HomePage';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -110,35 +110,7 @@ function NavBar() {
             </Stack.Navigator>
           )}
         </Tab.Screen>
-        <Tab.Screen
-          name={RouteNames.ACCOUNTPAGE}
-          options={{
-            headerShown: false,
-            tabBarLabel: 'Account',
-            tabBarIcon: ({color}) => (
-              <MaterialCommunityIcons name="account" color={color} size={26} />
-            ),
-          }}>
-          {props => (
-            <Stack.Navigator>
-              <Stack.Screen
-                name={RouteNames.ACCOUNT}
-                options={{headerShown: false}}
-                component={AccountPage}
-              />
-              <Stack.Screen
-                name={RouteNames.SIGNUP}
-                options={{headerShown: false}}>
-                {props => <SignUp {...props} />}
-              </Stack.Screen>
-              <Stack.Screen
-                name={RouteNames.USER}
-                options={{headerShown: false}}>
-                {props => <User {...props} />}
-              </Stack.Screen>
-            </Stack.Navigator>
-          )}
-        </Tab.Screen>
+
         <Tab.Screen
           name={RouteNames.Profile}
           options={{
@@ -155,6 +127,11 @@ function NavBar() {
                 options={{headerShown: false}}
                 component={ProfilePage}
               />
+              <Stack.Screen
+                name={RouteNames.SIGNUP}
+                options={{headerShown: false}}>
+                {props => <SignUp {...props} />}
+              </Stack.Screen>
             </Stack.Navigator>
           )}
         </Tab.Screen>

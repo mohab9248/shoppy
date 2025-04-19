@@ -124,7 +124,7 @@ export default function SignUp() {
 
         <View style={styles.footer}>
           <Text style={{color: '#555'}}>Already have an account?</Text>
-          <Pressable onPress={() => navigation.navigate(RouteNames.ACCOUNT)}>
+          <Pressable onPress={() => navigation.navigate(RouteNames.Profile)}>
             <Text style={styles.loginLink}> Login</Text>
           </Pressable>
         </View>

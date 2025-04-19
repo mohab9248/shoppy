@@ -100,7 +100,7 @@ const HomePage = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#f5f6fa',
     paddingTop: 10,
   },
   loadingContainer: {
@@ -133,6 +133,8 @@ const styles = StyleSheet.create({
   },
   productList: {
     paddingLeft: 10,
+    paddingRight: 10,
+    gap: 10, // Add spacing between items
   },
 });
 
