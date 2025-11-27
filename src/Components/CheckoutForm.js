@@ -49,7 +49,7 @@ const ShowAlert = () => {
 };
 
 function CheckoutForm() {
-  const {totalCheckout, user} = useUser();
+  const {totalCheckout, user, quantityy} = useUser();
   const cartItems = useContext(CartContext);
   const [fullName, setFullName] = useState(
     `${user.firstName} ${user.lastName}`,
@@ -57,6 +57,7 @@ function CheckoutForm() {
   const [phone, setPhone] = useState(user.phoneNumber);
   const [region, setRegion] = useState(null);
   const [address, setAddress] = useState(null);
+  const [city, setCity] = useState('');
 
   useEffect(() => {
     requestLocationPermission(setRegion);
@@ -73,10 +74,11 @@ function CheckoutForm() {
         axios.post(API_ENDPOINT, {
           user_id: user._id,
           product_id: item._id,
-          address: `${region.longitude}, ${region.latitude}`,
+          fullName: fullName,
           phoneNumber: phone,
+          address: city,
           quantity: item.quantity,
-          total: item.price * item.quantity,
+          total: totalCheckout,
           location: {
             type: 'Point',
             coordinates: [address.longitude, address.latitude],
@@ -112,7 +114,13 @@ function CheckoutForm() {
         value={phone}
         onChangeText={text => setPhone(text)}
       />
-
+      <TextInput
+        label="address"
+        style={styles.input}
+        mode="outlined"
+        value={city}
+        onChangeText={text => setCity(text)}
+      />
       <Text style={styles.label}>Select Delivery Location</Text>
       <View style={styles.mapContainer}>
         {region && (

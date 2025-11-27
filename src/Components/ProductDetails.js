@@ -9,85 +9,50 @@ import {
   ScrollView,
   Animated,
   Easing,
+  StyleSheet,
 } from 'react-native';
 import {ActivityIndicator} from 'react-native-paper';
 import axios from 'axios';
-import {useRoute} from '@react-navigation/native';
+import {useRoute, useNavigation} from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {CartContext} from '../navigators/NavBar';
-import {useNavigation} from '@react-navigation/native';
-import RouteNames from '../constants/routeNames';
-function ProductDetails({setCart, route, navigation}) {
-  const endpoint = 'http://10.0.2.2:4000/';
 
+function ProductDetails({setCart}) {
+  const endpoint = 'http://10.0.2.2:4000/';
   const {width} = useWindowDimensions();
   const [scrolledIndex, setScrolledIndex] = useState(0);
   const [productDetails, setProductDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const cart = useContext(CartContext);
   const [quant, setQuant] = useState(1);
-  const [categories, setCategories] = useState([]);
-
-  // const backgroundColourIndex = new Animated.Value(0);
-  // const backgroundCart = new Animated.Value(0);
   const backgroundCart = useRef(new Animated.Value(0)).current;
-  const getCategories = async () => {
-    const cats = await axios({
-      url: 'http://10.0.2.2:4000/getAllCategory',
-      method: 'get',
-    });
 
-    const categs = () => {
-      return cats.data.map(res => {
-        return res._id;
-      });
-    };
-
-    console.log(categs());
-  };
   const {
     params: {_id},
   } = useRoute();
+  const navigation = useNavigation();
+
   const getProductDetails = async () => {
-    // setLoading(true);
-    const product = await axios({
-      url: `http://10.0.2.2:4000/product/${_id}`,
-      method: 'get',
-    });
-    product.data.image = [
-      product.data.image,
-      product.data.image,
-      product.data.image,
-    ];
-    if (cart.find(({_id}) => _id == product.data._id)) {
+    const res = await axios.get(`http://10.0.2.2:4000/product/${_id}`);
+    res.data.image = [res.data.image, res.data.image, res.data.image];
+    if (cart.find(({_id}) => _id === res.data._id)) {
       backgroundCart.setValue(1);
     }
-
-    setProductDetails(product.data);
-    setQuant(product.data.quantity);
-    console.log(product.data);
+    setProductDetails(res.data);
+    setQuant(res.data.quantity);
     setLoading(false);
   };
 
   useEffect(() => {
-    getCategories();
     getProductDetails();
   }, []);
 
-  const onViewChanged = useRef(({viewableItems}) => {
-    console.log('Items ', viewableItems);
-    if (viewableItems.length > 0) {
-      const {index, item} = viewableItems[0];
-      setScrolledIndex(index);
-    }
-  });
   useEffect(() => {
-    // Update the params when quantity changes
     navigation.setParams({quant});
   }, [quant, navigation]);
-  const addToCart = p => () => {
-    setCart(cart => [...cart, p]);
 
+  const addToCart = p => () => {
+    setCart(prev => [...prev, p]);
     Animated.timing(backgroundCart, {
       toValue: 1,
       duration: 1000,
@@ -96,177 +61,98 @@ function ProductDetails({setCart, route, navigation}) {
     }).start();
   };
 
-  if (loading)
+  const onViewChanged = useRef(({viewableItems}) => {
+    if (viewableItems.length > 0) {
+      setScrolledIndex(viewableItems[0].index);
+    }
+  });
+
+  if (loading) {
     return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <ActivityIndicator />
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#e67e22" />
       </View>
     );
+  }
 
   return (
-    <View style={{flex: 1}}>
-      <ScrollView
-        style={{flex: 1}}
-        contentContainerStyle={{
-          alignItems: 'flex-start',
-          justifyContent: 'flex-start',
-        }}>
-        <View style={{width: width, maxHeight: width}}>
+    <View style={styles.container}>
+      <ScrollView>
+        {/* Image Carousel */}
+        <View style={{width, maxHeight: width}}>
           <FlatList
-            keyExtractor={(item, index) => '' + index}
-            showsHorizontalScrollIndicator={false}
-            horizontal
-            pagingEnabled={true}
-            style={{width: '100%', maxHeight: width}}
             data={productDetails.image}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item, index) => index.toString()}
+            onViewableItemsChanged={onViewChanged.current}
             viewabilityConfig={{
               waitForInteraction: true,
               viewAreaCoveragePercentThreshold: 60,
             }}
-            onViewableItemsChanged={onViewChanged?.current}
             renderItem={({item}) => (
               <Image
                 source={{uri: endpoint + item}}
                 resizeMode="contain"
-                style={{width: width, height: width * 0.8}}
+                style={{width, height: width * 0.85}}
               />
             )}
           />
-          <View
-            style={{
-              width,
-              position: 'absolute',
-              bottom: 0,
-              flexDirection: 'row',
-              left: 0,
-              right: 0,
-              backgroundColor: 'white',
-              opacity: 0.4,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            {productDetails.image.map((s, index) => (
+          <View style={styles.pagination}>
+            {productDetails.image.map((_, index) => (
               <View
                 key={index}
-                style={{
-                  width: 10,
-                  height: 10,
-                  margin: 5,
-                  opacity: index == scrolledIndex ? 1 : 0.5,
-                  backgroundColor: 'black',
-                  borderRadius: 5,
-                  overflow: 'hidden',
-                }}
+                style={[
+                  styles.paginationDot,
+                  scrolledIndex === index && styles.paginationDotActive,
+                ]}
               />
             ))}
           </View>
-          {/* <Image
-            source={{uri: image}}
-            style={{
-              width: '100%',
-              height: '100%',
-            }}
-          /> */}
         </View>
-        <View
-          style={{
-            padding: 10,
-            margin: 5,
-          }}>
-          <View
-            style={{
-              margin: 3,
-            }}>
-            <Text
-              style={{
-                fontWeight: '900',
-                fontSize: 18,
-              }}>
-              {productDetails.name}
-            </Text>
-          </View>
-          <View
-            style={{
-              margin: 3,
-            }}>
-            <Text>{productDetails.description}</Text>
-          </View>
-          <View
-            style={{
-              margin: 3,
-            }}>
-            <Text
-              style={{
-                fontWeight: '900',
-                fontSize: 18,
-              }}>
-              {productDetails.price}$
-            </Text>
-          </View>
+
+        {/* Product Info */}
+        <View style={styles.detailsContainer}>
+          <Text style={styles.productName}>{productDetails.name}</Text>
+          <Text style={styles.description}>{productDetails.description}</Text>
+          <Text style={styles.price}>${productDetails.price}</Text>
         </View>
       </ScrollView>
-      <View
-        style={{
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: '#e67e22',
-          padding: 10,
-        }}>
+
+      {/* Add to Cart */}
+      <View style={styles.addToCartWrapper}>
         <Pressable
-          disabled={!!cart.find(({_id}) => _id === productDetails?._id)}
-          style={{
-            backgroundColor: '#d35400',
-            width: '70%',
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: 10,
-            flexDirection: 'row',
-          }}
-          onPress={addToCart(productDetails)}>
+          style={styles.addToCartBtn}
+          onPress={addToCart(productDetails)}
+          disabled={!!cart.find(({_id}) => _id === productDetails._id)}>
           <Animated.View
-            style={{
-              backgroundColor: 'green',
-              width: backgroundCart.interpolate({
-                inputRange: [0, 1],
-                outputRange: ['0%', '100%'],
-              }),
-              height: backgroundCart.interpolate({
-                inputRange: [0, 1],
-                outputRange: ['0%', '100%'],
-              }),
-              borderRadius: 100,
-              opacity: backgroundCart.interpolate({
-                inputRange: [0, 1],
-                outputRange: [0, 1],
-              }),
-              position: 'absolute',
-              padding: 5,
-              justifyContent: 'center',
-              alignItems: 'center',
-              borderRadius: 10,
-              flexDirection: 'row',
-            }}></Animated.View>
-          <View
-            style={{
-              padding: 5,
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexDirection: 'row',
-            }}>
+            style={[
+              styles.addedOverlay,
+              {
+                width: backgroundCart.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: ['0%', '100%'],
+                }),
+                height: backgroundCart.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: ['0%', '100%'],
+                }),
+                opacity: backgroundCart.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0, 1],
+                }),
+              },
+            ]}
+          />
+          <View style={styles.addToCartContent}>
             <MaterialCommunityIcons
               name="cart-plus"
-              style={{marginRight: 10}}
-              color="#e67e22"
+              color="#fff"
               size={20}
+              style={{marginRight: 10}}
             />
-            <Text
-              style={{
-                color: '#e67e22',
-                fontWeight: 'bold',
-                textTransform: 'uppercase',
-              }}>
-              Add To Cart
-            </Text>
+            <Text style={styles.addToCartText}>Add to Cart</Text>
           </View>
         </Pressable>
       </View>
@@ -275,3 +161,82 @@ function ProductDetails({setCart, route, navigation}) {
 }
 
 export default ProductDetails;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f8f9fa',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  pagination: {
+    position: 'absolute',
+    bottom: 10,
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  paginationDot: {
+    width: 8,
+    height: 8,
+    backgroundColor: '#ccc',
+    borderRadius: 4,
+    margin: 5,
+  },
+  paginationDotActive: {
+    backgroundColor: '#333',
+  },
+  detailsContainer: {
+    padding: 20,
+  },
+  productName: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#2d3436',
+    marginBottom: 8,
+  },
+  description: {
+    fontSize: 16,
+    color: '#636e72',
+    lineHeight: 22,
+    marginBottom: 12,
+  },
+  price: {
+    fontSize: 22,
+    fontWeight: '600',
+    color: '#e67e22',
+  },
+  addToCartWrapper: {
+    padding: 16,
+    backgroundColor: '#fff',
+    borderTopColor: '#ddd',
+    borderTopWidth: 1,
+  },
+  addToCartBtn: {
+    backgroundColor: '#e67e22',
+    borderRadius: 10,
+    paddingVertical: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  addedOverlay: {
+    position: 'absolute',
+    backgroundColor: '#27ae60',
+    borderRadius: 10,
+    zIndex: 1,
+  },
+  addToCartContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    zIndex: 2,
+  },
+  addToCartText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+});

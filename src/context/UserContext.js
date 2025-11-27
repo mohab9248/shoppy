@@ -6,6 +6,7 @@ export const UserProvider = ({children}) => {
   const [user, setUser] = useState(null);
   const [isLogin, setIsLogin] = useState(false);
   const [totalCheckout, settotalCheckout] = useState(null);
+  const [quantityy, setQuantityy] = useState(0);
 
   const login = userData => {
     setUser(userData);
@@ -27,6 +28,8 @@ export const UserProvider = ({children}) => {
         setUser,
         totalCheckout,
         settotalCheckout,
+        quantityy,
+        setQuantityy,
       }}>
       {children}
     </UserContext.Provider>

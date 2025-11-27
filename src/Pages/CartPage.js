@@ -24,6 +24,7 @@ function CartItem({item, deleteItem, setTotalArray, index, setCart}) {
 
   const {price, quantity} = item;
   let total = price * quantityy;
+
   useEffect(() => {
     setTotalArray(prev => {
       const newArray = [...prev];
@@ -32,7 +33,7 @@ function CartItem({item, deleteItem, setTotalArray, index, setCart}) {
     });
     setCart(prev => {
       const newList = [...prev];
-      newList[index].quantity = quantity;
+      newList[index].quantity = quantityy;
       return newList;
     });
   }, [total, setTotalArray, setCart, quantity]);
@@ -171,11 +172,6 @@ const CartPage = ({setCart}) => {
 
   const cartItems = useContext(CartContext);
 
-  let totalPrice = cartItems.reduce(
-    (accumulator, current) => accumulator + current.price,
-    0,
-  );
-
   if (cartItems == 0)
     return (
       <View
@@ -267,11 +263,9 @@ const CartPage = ({setCart}) => {
         }}>
         <TouchableOpacity
           onPress={() => {
-            if (!isLogin) {
-              navigation.navigate(RouteNames.ACCOUNTPAGE);
-            } else {
-              navigation.navigate(RouteNames.CHECKOUT);
-            }
+            !isLogin
+              ? navigation.navigate(RouteNames.Profile)
+              : navigation.navigate(RouteNames.CHECKOUT);
           }}
           style={{
             width: '50%',
