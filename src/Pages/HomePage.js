@@ -6,9 +6,10 @@ import ProductThumbnail from '../Components/ProductThumbnail';
 import RouteNames from '../constants/routeNames';
 import CategorySeperator from '../Components/CategorySeperator';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import endpoint from '../constants/Endpoints';
 
-const PRODUCTS_ENDPOINT = 'http://10.0.2.2:4000/product';
-const CATEGORIES_ENDPOINT = 'http://10.0.2.2:4000/getAllCategory';
+const PRODUCTS_ENDPOINT = `http://${endpoint}/product`;
+const CATEGORIES_ENDPOINT = `http://${endpoint}/getAllCategory`;
 
 const HomePage = ({navigation}) => {
   const [products, setProducts] = useState([]);

@@ -14,7 +14,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import SearchProduct from '../Components/SearchProduct';
 import {useNavigation} from '@react-navigation/native';
 import RouteNames from '../constants/routeNames';
-
+import endpoint from '../constants/Endpoints';
 const CategoryPage = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -30,7 +30,7 @@ const CategoryPage = () => {
   const getCategories = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://10.0.2.2:4000/getAllCategory');
+      const response = await fetch(`http://${endpoint}/getAllCategory`);
       const data = await response.json();
       setCategories(data);
     } catch (error) {
@@ -43,7 +43,7 @@ const CategoryPage = () => {
   const getProducts = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://10.0.2.2:4000/product');
+      const response = await fetch(`http://${endpoint}/product`);
       const data = await response.json();
       setProducts(data);
       setFilteredProducts(data);
@@ -100,7 +100,7 @@ const CategoryPage = () => {
       <Image
         resizeMode="cover"
         style={styles.productImage}
-        source={{uri: 'http://10.0.2.2:4000/' + item.image}}
+        source={{uri: `http://${endpoint}/` + item.image}}
       />
       <Icon name="star" size={16} color="#FFD700" style={styles.star} />
       <View style={styles.productInfo}>
@@ -153,7 +153,7 @@ const CategoryPage = () => {
               selectedCategory === category._id && styles.categoryItemActive,
             ]}>
             <Image
-              source={{uri: 'http://10.0.2.2:4000/' + category.image}}
+              source={{uri: `http://${endpoint}/` + category.image}}
               style={styles.categoryImage}
             />
             <Text numberOfLines={1} style={styles.categoryText}>

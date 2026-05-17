@@ -4,7 +4,7 @@ import {TextInput, Button, ActivityIndicator} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import RouteNames from '../constants/routeNames';
 import {useUser} from '../context/UserContext';
-
+import endpoint from '../constants/Endpoints';
 export default function SignUp() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -16,7 +16,7 @@ export default function SignUp() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
-  const REGISTER_ENDPOINT = 'http://10.0.2.2:4000/register';
+  const REGISTER_ENDPOINT = `http://${endpoint}/register`;
   const {login} = useUser();
 
   const handleSignup = () => {

@@ -15,9 +15,9 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {useNavigation} from '@react-navigation/native';
 import RouteNames from '../constants/routeNames';
 import {useUser} from '../context/UserContext';
-
+import endpoint from '../constants/Endpoints';
 function CartItem({item, deleteItem, setTotalArray, index, setCart}) {
-  const endpoint = 'http://10.0.2.2:4000/';
+  const endpoints = `http://${endpoint}/`;
   const {width} = useWindowDimensions();
   const {navigate} = useNavigation();
   const [quantityy, setQuantityy] = useState(1);
@@ -76,7 +76,7 @@ function CartItem({item, deleteItem, setTotalArray, index, setCart}) {
             height: 95,
           }}
           resizeMode="cover"
-          source={{uri: endpoint + item.image[0]}}
+          source={{uri: endpoints + item.image[0]}}
         />
         <Text
           style={{

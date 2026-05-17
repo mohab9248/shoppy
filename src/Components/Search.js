@@ -4,9 +4,9 @@ import {FlatList, Image, Pressable, Text, View, TextInput} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 import RouteNames from '../constants/routeNames';
-
-const PRODUCTS_ENDPOINT = 'http://10.0.2.2:4000/product';
-const endpoint = 'http://10.0.2.2:4000/';
+import endpoint from '../constants/Endpoints';
+const PRODUCTS_ENDPOINT = `http://${endpoint}/product`;
+const endpoints = `http://${endpoint}/`;
 const Search = () => {
   const navigation = useNavigation();
   const [search, setSearch] = useState('');
@@ -89,7 +89,7 @@ const Search = () => {
                 }}>
                 <Image
                   resizeMode="contain"
-                  source={{uri: endpoint + item.image}}
+                  source={{uri: endpoints + item.image}}
                   style={{width: 50, height: 50, borderRadius: 25}}
                 />
                 <View style={{paddingLeft: 5}}>

@@ -16,9 +16,9 @@ import axios from 'axios';
 import {useRoute, useNavigation} from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {CartContext} from '../navigators/NavBar';
-
+import endpoint from '../constants/Endpoints';
 function ProductDetails({setCart}) {
-  const endpoint = 'http://10.0.2.2:4000/';
+  const endpoints = `http://${endpoint}/`;
   const {width} = useWindowDimensions();
   const [scrolledIndex, setScrolledIndex] = useState(0);
   const [productDetails, setProductDetails] = useState(null);
@@ -33,7 +33,7 @@ function ProductDetails({setCart}) {
   const navigation = useNavigation();
 
   const getProductDetails = async () => {
-    const res = await axios.get(`http://10.0.2.2:4000/product/${_id}`);
+    const res = await axios.get(`http://${endpoint}/product/${_id}`);
     res.data.image = [res.data.image, res.data.image, res.data.image];
     if (cart.find(({_id}) => _id === res.data._id)) {
       backgroundCart.setValue(1);
@@ -93,7 +93,7 @@ function ProductDetails({setCart}) {
             }}
             renderItem={({item}) => (
               <Image
-                source={{uri: endpoint + item}}
+                source={{uri: endpoints + item}}
                 resizeMode="contain"
                 style={{width, height: width * 0.85}}
               />

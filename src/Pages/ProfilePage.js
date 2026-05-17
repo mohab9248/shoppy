@@ -16,7 +16,8 @@ import EditProfile from '../Components/EditProfile';
 import Success from '../Components/Success';
 import {useNavigation} from '@react-navigation/native';
 import RouteNames from '../constants/routeNames';
-const LOGIN_ENDPOINT = 'http://10.0.2.2:4000/login';
+import endpoint from '../constants/Endpoints';
+const LOGIN_ENDPOINT = `http://${endpoint}/login`;
 
 const ProfilePage = () => {
   const {user, login, logout} = useUser();

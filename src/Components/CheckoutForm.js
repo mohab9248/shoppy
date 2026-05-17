@@ -14,8 +14,8 @@ import MapView, {Marker} from 'react-native-maps';
 import {CartContext} from '../navigators/NavBar';
 import {useUser} from '../context/UserContext';
 import axios from 'axios';
-
-const API_ENDPOINT = 'http://10.0.2.2:4000/addOrder'; // Replace with your actual backend
+import endpoint from '../constants/Endpoints';
+const API_ENDPOINT = `http://${endpoint}/addOrder`; // Replace with your actual backend
 
 const requestLocationPermission = async setRegion => {
   try {

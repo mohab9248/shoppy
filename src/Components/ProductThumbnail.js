@@ -2,7 +2,7 @@ import React from 'react';
 import {Pressable, Text, Image, StyleSheet, View} from 'react-native';
 import RouteNames from '../constants/routeNames';
 import {useNavigation} from '@react-navigation/native';
-
+import endpoint from '../constants/Endpoints';
 export default function ProductThumbnail({
   item,
   category = false,
@@ -11,7 +11,7 @@ export default function ProductThumbnail({
   imageStyle,
   textStyle,
 }) {
-  const endpoint = 'http://10.0.2.2:4000/';
+  const endpoints = `http://${endpoint}/`;
   const navigation = useNavigation();
 
   return (
@@ -32,7 +32,7 @@ export default function ProductThumbnail({
       <Image
         style={[styles.image, imageStyle]}
         resizeMode="cover"
-        source={{uri: endpoint + item.image}}
+        source={{uri: endpoints + item.image}}
       />
       <View style={styles.details}>
         <Text

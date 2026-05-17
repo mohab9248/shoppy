@@ -4,7 +4,7 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useUser} from '../context/UserContext';
 import {TextInput} from 'react-native-paper';
-
+import endpoint from '../constants/Endpoints';
 export default function EditProfile({setOpen, setSuccess}) {
   const {user, setUser} = useUser();
   const [firstName, setFirstName] = useState(user.firstName || '');
@@ -27,7 +27,7 @@ export default function EditProfile({setOpen, setSuccess}) {
 
     try {
       const response = await fetch(
-        `http://10.0.2.2:4000/userUpdates/${user.id}`,
+        `http://${endpoint}/userUpdates/${user.id}`,
         {
           method: 'PUT',
           headers: {
